@@ -2,7 +2,7 @@
   "name": "octopus-library",
   "version": "1.0.0",
   "description": "The site that powers library.octopusdeploy.com",
-  "main": "server.js",
+  "main": "server/server.js",
   "dependencies": {
     "compression": "^1.0.2",
     "express": "~4.2.0"
