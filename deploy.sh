@@ -104,6 +104,7 @@ echo 1. Select node version
 selectNodeVersion
 
 echo 2. Install npm packages
+eval $NPM_CMD cache clean
 if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
   eval $NPM_CMD install
   exitWithMessageOnError "npm failed"
