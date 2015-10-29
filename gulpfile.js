@@ -5,7 +5,7 @@ var concat = require('gulp-concat');
 var rev = require('gulp-rev');
 var minifyCss = require('gulp-minify-css');
 var inject = require('gulp-inject');
-var clean = require('gulp-clean');
+var del = require('del');
 var jshint = require('gulp-jshint');
 var rename = require('gulp-rename');
 var ngHtml2Js = require("gulp-ng-html2js");
@@ -16,6 +16,7 @@ var sourceUrl = require('gulp-source-url');
 var filter = require('gulp-filter');
 var childProcess = require('child_process');
 var data = require('gulp-data');
+var glimpse = require('glimpse');
 
 var reExt = function(ext) {
   return rename(function(path) { path.extname = ext; })
@@ -163,8 +164,7 @@ gulp.task('html-debug', ['rev', 'assets'], function() {
 });
 
 gulp.task('clean', function() {
-  return gulp.src(['build', 'dist', 'tmp'], {read: false})
-    .pipe(clean());
+  return del(['build', 'dist', 'tmp']);
 });
 
 gulp.task('server', ['clean'], function(){
@@ -186,20 +186,33 @@ var start = function() {
 };
 
 gulp.task('snapshot', ['baseline', 'prepare-snapshot'], function(cb) {
-  var server = start();
 
-  childProcess.exec('grunt', function(error, stdout, stderr){
-    console.log(stdout);
-    console.log(stderr);
-
-    if (error) {
-      console.log(error);
-    }
-
-    server.close();
-
-    cb(error);
+  var glimpseConfig = require('./tmp/html-snapshot/snapshot-sitemap.json');
+  glimpse({
+    folder: 'build/public',
+    urls: glimpseConfig.urls,
+    outputDir: glimpseConfig.snapshotPath,
+    verbose: true
+  })
+  .then(function() {
+    cb();
+  }).fail(function(err) {
+    cb(err);
   });
+//   var server = start();
+// 
+//   childProcess.exec('grunt', function(error, stdout, stderr){
+//     console.log(stdout);
+//     console.log(stderr);
+// 
+//     if (error) {
+//       console.log(error);
+//     }
+// 
+//     server.close();
+// 
+//     cb(error);
+//   });
 });
 
 gulp.task('install-snapshot', ['snapshot'], function() {
