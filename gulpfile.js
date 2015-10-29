@@ -186,7 +186,7 @@ var start = function() {
 };
 
 gulp.task('snapshot', ['baseline', 'prepare-snapshot'], function(cb) {
-  //var server = start();
+  var server = start();
 
   childProcess.exec('grunt', function(error, stdout, stderr){
     console.log(stdout);
@@ -196,7 +196,7 @@ gulp.task('snapshot', ['baseline', 'prepare-snapshot'], function(cb) {
       console.log(error);
     }
 
-    //server.close();
+    server.close();
 
     cb(error);
   });
