@@ -118,8 +118,10 @@ if [ -e "$DEPLOYMENT_SOURCE/bower.json" ]; then
   exitWithMessageOnError "bower failed"
 fi
 
-echo 4. Run gulp
+echo 4. Build site
 if [ -e "$DEPLOYMENT_SOURCE/gulpfile.js" ]; then
+  eval $NPM_CMD install -g phantomjs
+  exitWithMessageOnError "installing phantomjs failed"
   eval $NPM_CMD install gulp
   exitWithMessageOnError "installing gulp failed"
   eval ./node_modules/.bin/gulp
